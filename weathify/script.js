@@ -1,13 +1,23 @@
 let weather={
- "apikey": "ecbb3886f8fe3f8258d1cae670ce6cde",
- fetchWeather: function(city){
+  apikey: "f96e551c7b8b3bfdde7b62a03af2e0d8",
+ //"apikey": "ecbb3886f8fe3f8258d1cae670ce6cde",
+// https://api.openweathermap.org/data/2.5/weather?q=Denver&appid=f96e551c7b8b3bfdde7b62a03af2e0d8
+//https://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=f96e551c7b8b3bfdde7b62a03af2e0d8
+ 
+fetchWeather: function(city){
     fetch(
-        "https://api.openweathermap.org/data/2.5/weather?q=" +
-        city +
-        "&units=metric&appid=" +
-        this.apikey
-    ).then((response)=>response.json())
-    .then((data)=>console.log(data));
+        "https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid="+this.apikey
+        
+        //"&appid="+this.apikey
+       // "&units=metric&appid=" +
+    ).then((response) => {
+      if (!response.ok) {
+        alert("No weather found.");
+        throw new Error("No weather found.");
+      }
+      return response.json();
+    })
+    .then((data) => this.displayWeather(data));
  },
  displayWeather: function(data){
    const {name} =data;
@@ -15,7 +25,7 @@ let weather={
    const {temp,humidity} =data.main;
    const {speed}=data.wind;
    //console.log(name,icon, description,temp,humidity,speed);
-   document.querySelector(".city").innerText="Weather in"+ name;
+   document.querySelector(".city").innerText="Weather in "+ name;
    document.querySelector(".icon").src ="https://openweathermap.org/img/wn/" + icon + ".png";
    document.querySelector(".description").innerText=description;
    document.querySelector(".temp").innerText=temp+ "°C";
@@ -26,7 +36,7 @@ let weather={
  },
  // takes the city that user enters
  search: function(){
-    this.fetchWeather(document.querySelector(".search-bar")).value;
+    this.fetchWeather(document.querySelector(".search-bar").value);
  }
 };
 // search city that is entered
@@ -39,4 +49,4 @@ document.querySelector(".search-bar").addEventListener("keyup",function() {
         weather.search();
     }
 })
-weather.fetchWeather("Denver");
+weather.fetchWeather("Delhi");
